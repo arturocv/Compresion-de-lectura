@@ -4,7 +4,9 @@ import  {FORMULARIO_PROYECTO,
     VALIDAR_FORMULARIO,
     PROYECTO_ACTUAL,
     ELIMINAR_PROYECTO,
-    TAREAS_PROYECTO 
+    TAREAS_PROYECTO,
+    MOSTRAR_ALERTA,
+    OCULTAR_ALERTA 
 } from '../../types';
 
 export default (state, action) => {
@@ -51,6 +53,16 @@ export default (state, action) => {
             return{
                 ...state,
                 tareasproyecto: state.tareas.filter(tarea => tarea.proyectoId === action.payload)
+            }
+
+            case MOSTRAR_ALERTA:
+            return{
+                alerta: action.payload
+            }
+            
+            case OCULTAR_ALERTA:
+            return{
+                alerta: null
             }
         default:
             return state;

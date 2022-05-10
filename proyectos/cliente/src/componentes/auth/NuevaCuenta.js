@@ -1,7 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { Link } from 'react-router-dom';
+import proyectoContext from '../../context/proyectos/proyectoContext';
 
 const NuevaCuenta = () => {
+    //Extraer valores del context
+    const proyectosContext = useContext(proyectoContext);
+    const {alerta, mostrarAlerta} = proyectosContext;
 
     //State para iniciar sesion
     const [usuario, setUsuario] = useState({
@@ -23,14 +27,24 @@ const NuevaCuenta = () => {
     //Cuando el usuario quiere iniciar Sesion
     const onSubmit = (e) => {
         e.preventDefault();
+       
 
         //validacion del formulario
+        if(nombre == '' || 
+            email == '' || 
+            password == '' ||
+            confirmar == ''){
 
+            mostrarAlerta('Todos los campos son obligatorios', 'alerta-error');
+            return;
 
-        //Pasarlo al action
-
+        }
 
         //Password minimo de 6 caractes
+        if(password.length < 6){
+            mostrarAlerta('La contraseña debe ser minino de 6 caracteres', 'alerta-error');
+            return;
+        }
 
 
         //Password iguales
@@ -38,8 +52,9 @@ const NuevaCuenta = () => {
 
     return (
         <div className='form-usuario'>
+            { alerta ? ( <div className={`alerta ${alerta.categoria}`}> {alerta.msg} </div> )  : null }
             <div className='contenedor-form sombra-dark'>
-                <h1>Cre3ar Cuenta</h1>
+                <h1>Crear Cuenta</h1>
 
                 <form
                     onSubmit={onSubmit}

@@ -8,7 +8,9 @@ import  {FORMULARIO_PROYECTO,
 		VALIDAR_FORMULARIO,
 		PROYECTO_ACTUAL,
 		ELIMINAR_PROYECTO,
-		TAREAS_PROYECTO 
+		TAREAS_PROYECTO,
+		MOSTRAR_ALERTA,
+    	OCULTAR_ALERTA 
 	} from '../../types';
 import { type } from '@testing-library/user-event/dist/type';
 
@@ -42,6 +44,7 @@ const ProyectoState = (props) => {
             {nombre: 'Elegir Hosting', estado: true,  proyectoId: 1},
         ],
 		tareasproyecto: null,	
+		alerta: null,
 	}
 
 	//Dispatch para ejecutar las acciones
@@ -104,7 +107,22 @@ const ProyectoState = (props) => {
 		})
 	}
 
+	const mostrarAlerta = (msg, categoria) => {
+        dispatch({
+            type:  MOSTRAR_ALERTA,
+            payload: {
+                msg, 
+                categoria
+            }
+        });
 
+        // Después de 5 segundos limpiar la alerta
+        setTimeout(() => {
+            dispatch({
+                type: OCULTAR_ALERTA
+            })
+        }, 3000);
+    }
 
 	return(
 		<proyectoContext.Provider
@@ -115,13 +133,15 @@ const ProyectoState = (props) => {
 				proyecto: state.proyecto,
 				tareas: state.tareas,
 				tareasproyecto: state.tareasproyecto,
+				alerta: state.alerta,
 				mostrarFormulario,
 				obtenerProyectos,
 				agregarProyecto,
 				mostrarError,
 				proyectoActual,
 				eliminarProyecto,
-				obtenertareas
+				obtenertareas,
+				mostrarAlerta
 				
 				
 			}}
