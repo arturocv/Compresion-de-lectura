@@ -10,9 +10,17 @@ import  {FORMULARIO_PROYECTO,
 		ELIMINAR_PROYECTO,
 		TAREAS_PROYECTO,
 		MOSTRAR_ALERTA,
-    	OCULTAR_ALERTA 
+    	OCULTAR_ALERTA,
+		REGISTRO_EXITOSO,
+		REGISTRO_ERROR,
+		OBTENER_USUARIO,
+		LOGIN_EXITOSO,
+		LOGIN_ERROR,
+		CERRAR_SESION 
 	} from '../../types';
 import { type } from '@testing-library/user-event/dist/type';
+import clienteAxios from '../../config/axios';
+import tokenAuth from '../../config/token';
 
 const ProyectoState = (props) => {
 
@@ -45,6 +53,10 @@ const ProyectoState = (props) => {
         ],
 		tareasproyecto: null,	
 		alerta: null,
+		token: localStorage.getItem('token'),
+		autenticado: null,
+		usuario: null,
+		mensaje: null
 	}
 
 	//Dispatch para ejecutar las acciones
@@ -124,6 +136,54 @@ const ProyectoState = (props) => {
         }, 3000);
     }
 
+	const registrartUsuario = async datos => {
+		try {
+			const respuesta = await clienteAxios.post('/api/usuarios', datos);
+			// console.log(respuesta);  //Validar la respuesta por consola para ver conexion
+ 
+			dispatch({
+				type: REGISTRO_EXITOSO,
+				payload: respuesta.data
+			});
+
+			//Obtener el usuario
+			usuarioAutenticado();
+		} catch (error) {
+			const alerta = {
+				msg: error.response.data.msg,
+				categoria: 'alerta-error'
+			}
+
+			dispatch({
+				type: REGISTRO_ERROR,
+				payload: alerta
+			})
+		}
+	}
+
+	//Retorna el usuario autenticado
+	const usuarioAutenticado = async () => {
+		const token = localStorage.getItem('token');
+		if(token){
+			//Funcion para enviar el token por headers
+			tokenAuth(token);
+		}
+
+		try {
+			const respuesta = await clienteAxios('/api/auth');
+			console.log("desde respuesta: " + respuesta);
+			dispatch({
+				type: OBTENER_USUARIO,
+				payload: respuesta.data
+			})
+		} catch (error) {
+			console.log(error.response);
+			dispatch({
+				type: LOGIN_ERROR
+			})
+		}
+	}
+
 	return(
 		<proyectoContext.Provider
 			value={{
@@ -134,15 +194,19 @@ const ProyectoState = (props) => {
 				tareas: state.tareas,
 				tareasproyecto: state.tareasproyecto,
 				alerta: state.alerta,
-				mostrarFormulario,
+				token: state.token,
+				autenticado: state.autenticado,	
+				usuario: state.usuario,
+				mensaje: state.mensaje,
+				mostrarFormulario,	
 				obtenerProyectos,
 				agregarProyecto,
 				mostrarError,
 				proyectoActual,
 				eliminarProyecto,
 				obtenertareas,
-				mostrarAlerta
-				
+				mostrarAlerta,
+				registrartUsuario			
 				
 			}}
 		>

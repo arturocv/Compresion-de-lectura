@@ -5,6 +5,10 @@ const jwt = require('jsonwebtoken');
 
 exports.crearUsuario = async(req, res) => {
 
+    const {password } = req.body;
+
+    password : toString(password);
+
     //Revisamos si hay errores
     const errores = validationResult(req);
     if(!errores.isEmpty()){
@@ -13,7 +17,9 @@ exports.crearUsuario = async(req, res) => {
 
 
     //Extraer Email y password por destructuring    
-    const {email, password} = req.body;
+    //const {email, password} = req.body;
+    const {email } = req.body;
+
 
     try {
 
@@ -26,6 +32,7 @@ exports.crearUsuario = async(req, res) => {
         
         //Crea nuevo usuario
         usuario = new Usuario(req.body);
+
 
         //Hashear el password
         const salt = await bcrypjs.genSalt(10);

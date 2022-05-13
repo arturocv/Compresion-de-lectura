@@ -1,11 +1,29 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import proyectoContext from '../../context/proyectos/proyectoContext';
+import { useNavigate } from 'react-router-dom';
 
 const NuevaCuenta = () => {
+
+    const history = useNavigate();
+
     //Extraer valores del context
     const proyectosContext = useContext(proyectoContext);
-    const {alerta, mostrarAlerta} = proyectosContext;
+    const {alerta, mostrarAlerta, registrartUsuario, autenticado, mensaje} = proyectosContext;
+
+    // En caso de que el usuario se haya autenticado o registrado o sea un registro duplicado
+    useEffect(() => {
+        if(autenticado){
+            // this.props.history.push('/proyectos');
+            history("/proyectos");
+        }
+        if(mensaje){
+            mostrarAlerta( mensaje.msg, 'alerta-error');
+
+        }
+        
+    }, [mensaje, autenticado, history]);
+
 
     //State para iniciar sesion
     const [usuario, setUsuario] = useState({
@@ -15,25 +33,26 @@ const NuevaCuenta = () => {
         confirmar: ''
     });
 
-    const {nombre, email, password, confirmar} = usuario;
+    let {nombre, email, password, confirmar} = usuario;
 
     const onChange = (e) => {
         setUsuario({
             ...usuario,
-            [e.target.name]: [e.target.value]
-        })
+            [e.target.name]: [e.target.value],
+            
+        });
+        
     }
 
     //Cuando el usuario quiere iniciar Sesion
     const onSubmit = (e) => {
         e.preventDefault();
-       
 
         //validacion del formulario
-        if(nombre == '' || 
-            email == '' || 
-            password == '' ||
-            confirmar == ''){
+        if(nombre === '' || 
+            email === '' || 
+            password === '' ||
+            confirmar === ''){
 
             mostrarAlerta('Todos los campos son obligatorios', 'alerta-error');
             return;
@@ -41,13 +60,23 @@ const NuevaCuenta = () => {
         }
 
         //Password minimo de 6 caractes
-        if(password.length < 6){
+        if(password[0].length < 6){
             mostrarAlerta('La contraseña debe ser minino de 6 caracteres', 'alerta-error');
             return;
         }
-
-
         //Password iguales
+        if(password[0] !== confirmar[0]){
+            mostrarAlerta('Las contraseñas no coinciden', 'alerta-error');
+            return;
+        }
+
+        //Pasarlo al action
+        registrartUsuario({
+            nombre: "Arturo",
+            email: "kngarturo@gmail.com", 
+            password: "123456"          
+        });
+
     }
 
     return (
