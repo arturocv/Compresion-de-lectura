@@ -1,20 +1,38 @@
-const mongoose = require('mongoose');
-const app = require('./app');
-const PORT_SERVER = process.env.PORT || 3977;
+const express = require('express');
+const conectarDB = require('./config/db');  //Improtamos el archico de conexion
+const cors = require('cors');
 
-const {API_VERSION, IP_SERVER, porDb} = require('./config');
+//Crear servidor
+const app = express();
 
 
-mongoose.connect(`mongodb://${IP_SERVER}:${porDb}/webpersonal`, 
-                {useNewUrlParser:  true, useUnifiedTopology: true}, (err, res) => {
-                    if(err){
-                        throw err;
-                    }else{
-                        console.log("Conexion OK");
+//Conectamos a la BD
+conectarDB();
 
-                        app.listen(PORT_SERVER, () => {
-                            console.log(`http://${IP_SERVER}:${PORT_SERVER}/api/${API_VERSION}/`);
-                        })
-                    }
-                });
+//Habilitar CORS
+app.use(cors());
 
+//habilitar express.json
+app.use(express.json({extended: true}));
+
+
+//PUERTO DE LA APP
+const PORT = process.env.PORT || 4000;
+
+
+//Importar rutas
+app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/auth', require('./routes/auth'));
+
+
+
+//Definir la pagina principal
+// app.get('/', (req, res) => {
+//     res.send('Hola Mundo');
+// });
+
+
+//Inicar la app
+app.listen(PORT, () => {
+    console.log(`El servidor esta funcionando en el puerto ${PORT}`);
+});

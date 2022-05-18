@@ -139,7 +139,7 @@ const ProyectoState = (props) => {
 	const registrartUsuario = async datos => {
 		try {
 			const respuesta = await clienteAxios.post('/api/usuarios', datos);
-			// console.log(respuesta);  //Validar la respuesta por consola para ver conexion
+			console.log(respuesta);  //Validar la respuesta por consola para ver conexion
  
 			dispatch({
 				type: REGISTRO_EXITOSO,

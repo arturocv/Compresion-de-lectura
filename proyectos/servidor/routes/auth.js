@@ -17,4 +17,5 @@ router.get('/',
     auth,
     authController.usuarioAutenticado
 );
+
 module.exports = router;

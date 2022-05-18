@@ -11,7 +11,6 @@ import ProyectoState from './context/proyectos/ProyectoState';
 import TareaState from './context/tareas/tareaState';
 
 const App = () => {
-
 	return (
 		<ProyectoState>
 			<Router>
