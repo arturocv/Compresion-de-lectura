@@ -72,9 +72,9 @@ const NuevaCuenta = () => {
 
         //Pasarlo al action
         registrartUsuario({
-            nombre,
-            email, 
-            password          
+            nombre:"Arturo",
+            email:"kngarturo@gmail.com ", 
+            password: "123456"          
         });
 
     }

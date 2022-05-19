@@ -27,9 +27,9 @@ app.use('/api/auth', require('./routes/auth'));
 
 
 //Definir la pagina principal
-app.get('/', (req, res) => {
-    res.send('Hola Mundo');
-});
+// app.get('/api/usuarios', (req, res) => {
+//     res.send('Hola Mundo');
+// });
 
 
 //Inicar la app

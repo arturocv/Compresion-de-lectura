@@ -36,7 +36,7 @@ exports.crearUsuario = async(req, res) => {
 
         //Hashear el password
         const salt = await bcrypjs.genSalt(10);
-        usuario.password = await bcrypjs.hash(password, salt);
+        // usuario.password = await bcrypjs.hash(password, salt);
 
         //guardar nuevo usuario
         await usuario.save();
