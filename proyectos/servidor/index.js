@@ -33,6 +33,6 @@ app.use('/api/auth', require('./routes/auth'));
 
 
 //Inicar la app
-app.listen(PORT, () => {
+app.listen(PORT,"0.0.0.0", () => {
     console.log(`El servidor esta funcionando en el puerto ${PORT}`);
 });
