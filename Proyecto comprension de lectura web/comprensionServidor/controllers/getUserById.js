@@ -7,7 +7,7 @@ const getUserById = async(req, res) => {
         Usuario.findById(userId).then((usuario) => {
           if (!usuario) {
             return res.json({
-              mensaje: "No se encontro ningun usuario con esa ID",
+              mensaje: "No se encontro ningun usuario con ese Email",
             });
           } else {
             const { _id, password, __v, ...resto } = usuario._doc;
@@ -15,7 +15,7 @@ const getUserById = async(req, res) => {
           }
         });
       } else {
-        res.json({ mensaje: "Estas enviando una contraseña incorrecta" });
+        res.json({ mensaje: "Contraseña incorrecta" });
       }
 }
 

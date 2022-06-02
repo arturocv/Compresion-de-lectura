@@ -85,8 +85,8 @@ const ComprensionState = (props) => {
 		}
 
 		try {
-			// const respuesta = await clienteAxios('/api/auth');
-			// console.log("desde respuesta: " + respuesta);
+			const respuesta = await axios.get('/login');
+			console.log("desde respuesta: " + respuesta);
 			// dispatch({
 			// 	type: OBTENER_USUARIO,
 			// 	payload: respuesta.data
