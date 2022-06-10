@@ -4,15 +4,12 @@ import morgan from "morgan";
 const app = express();
 
 
-
 //Routes
 import languageRoutes from './routers/languageRoutes';
 
 
-
 // Settings
 app.set("port", 4000);
-
 
 
 // Middlewares

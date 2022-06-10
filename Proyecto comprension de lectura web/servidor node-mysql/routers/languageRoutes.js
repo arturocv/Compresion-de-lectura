@@ -8,5 +8,6 @@ router.get("/api/languages/:id", languageController.getLanguagesById);
 router.post("/api/addlanguages", languageController.addLanguages);
 router.put("/api/updatelanguages/:id", languageController.updateLanguage);
 router.delete("/api/deletelanguages/:id", languageController.deleteLanguage);
+router.post("/api/login", languageController.login);
 
 export default router;
