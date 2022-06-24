@@ -1,23 +1,17 @@
 const mysql = require('promise-mysql');
-const config = require('../config/config');
+require('dotenv').config({path: 'variables.env'});
 
 const connection = mysql.createConnection({
-    host: config.host,
-    database: config.database,
-    user: config.user,
-    password: config.password
+    host: process.env.HOST_DB,
+    database: process.env.DATABASE,
+    user: process.env.USER,
+    password: process.env.PASSWORD
 });
 
-// connection.connect(function(err) {
-//     if (err) {
-//       console.error('error connecting: ' + err.stack);
-//       return;
-//     }  
-//     console.log('connected as id ' + connection.threadId);
-// });
+const getConnection = () => {     
+    return connection;
+};
 
-// const getConnection = () => {
-//     return connection;
-// }
-
-module.exports = connection;
+module.exports = {
+    getConnection
+};

@@ -12,7 +12,7 @@ import {
     AUTH_ERROR,
     CERRAR_SESION
 } from '../../types';
-import axios from 'axios';
+import { clienteAxios } from '../../config';
 
 const ComprensionState = (props) => {
     const initialState = {
@@ -54,7 +54,8 @@ const ComprensionState = (props) => {
     const registrarUsuario = async datos => {
 
 		try {
-			const respuesta = await axios.put('http://localhost:4000/api/addUsers', datos);
+			// const respuesta = await axios.put('http://localhost:4000/api/addUsers', datos);
+            const respuesta = await clienteAxios.put('addUsers', datos);
             console.log(respuesta.data.mensaje);
 
             const alert = {
@@ -97,19 +98,23 @@ const ComprensionState = (props) => {
 
     const usuarioAutenticado = async () => {
 		const token = localStorage.getItem('token');    
+        console.log('desde auth: ' + token);
+
 		if(token){         
-            axios.defaults.headers.common['x-auth-token'] = token;
+            clienteAxios.defaults.headers.common['x-auth-token'] = token;
 		}else{
-            delete axios.defaults.headers.common['x-auth-token'];
+            delete clienteAxios.defaults.headers.common['x-auth-token'];
         }
-        const header = {
-            headers: {
-                "content-type": "application/json"
-            }
-        };
+        // const header = {
+        //     headers: {
+        //         "content-type": "application/json"
+        //     }
+        // };
 
 		try {
-			const respuesta = await axios.get('http://localhost:4000/api/login');
+			// const respuesta = await axios.get('http://localhost:4000/api/login');
+            const respuesta = await clienteAxios.get('/login');
+            console.log("Desde auth: "+ respuesta);
 			dispatch({
 				type: OBTENER_USUARIO,
 				payload: respuesta.data[0]
@@ -136,15 +141,15 @@ const ComprensionState = (props) => {
     //Cuando el usuario Inicia Sesion
     const loginUsuario = async (data) => {
 		try {
-			const respuesta = await axios.post('http://localhost:4000/api/login', data);
-
+			// const respuesta = await axios.post('http://localhost:4000/api/login', data);
+            const respuesta = await clienteAxios.post('/login', data);
 			dispatch({
 				type: LOGIN_EXITOSO,
 				payload: respuesta.data
 			});
             setTimeout(() => {
                 usuarioAutenticado();
-            }, 5)
+            }, 1000)
 		} catch (error) {
 			// console.log(error.response);
             const alert = {
@@ -160,7 +165,7 @@ const ComprensionState = (props) => {
                 dispatch({
                     type: OCULTAR_ALERTA
                 })
-            }, 2000);
+            }, 5);
 		}
 	}
 

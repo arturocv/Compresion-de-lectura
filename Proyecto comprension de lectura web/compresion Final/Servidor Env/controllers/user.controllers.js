@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
-const {getConnection} = require('../config/config');
+const {getConnection} = require('../database/db');
+
 
 exports.addUser = async(req,res) => {
     console.log(req.body);
@@ -50,7 +51,7 @@ exports.addUser = async(req,res) => {
         }
         
     } catch (error) {
-        res.status(500);
+        res.status(500).json({mensaje: 'Error desde el registro'});
         res.setHeader('Content-Type', 'text/plain');
         res.send(error.message);
     }
@@ -93,7 +94,7 @@ exports.login = async (req, res) => {
             })
         }        
     } catch (error) {
-        res.status(500);
+        res.status(500).json({mensaje: 'Error desde el login'});
         res.send(error.message);
     }
 }
@@ -105,6 +106,6 @@ exports.autenticacionUser = async(req, res) => {
         const usuario = await connection.query("SELECT nombres, email, institucion, texto, id FROM usuarios WHERE id= ?", req.usuario.id);
         res.json(usuario);
     } catch (error) {
-        res,json(error);
+        res.json(error);
     }
 }

@@ -58,9 +58,9 @@ export default (state, action) => {
                 return{
                     autenticado: false,
                     token: null,
-                    usuario: null
-                    // alerta: true,
-                    // mensajeErrorForm: action.payload,
+                    // usuario: null,
+                    alerta: true,
+                    mensajeErrorForm: action.payload,
                 }
 
             case OBTENER_USUARIO:
@@ -68,7 +68,7 @@ export default (state, action) => {
                     ...state,
                     usuario: action.payload,  
                     autenticado: true,
-                    cargando: false             
+                    cargando: false,
                 }
             
             case LOGIN_EXITOSO:

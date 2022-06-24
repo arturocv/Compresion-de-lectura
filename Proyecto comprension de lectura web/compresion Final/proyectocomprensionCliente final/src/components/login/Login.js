@@ -1,18 +1,16 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined,  LockOutlined, 
-		MailOutlined, EnvironmentOutlined, 
-		KeyOutlined, } from '@ant-design/icons';
+import { Form, Input, Button } from 'antd';
+import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import AnimacionLogo from '../../Animations/logo/AnimacionLogo';
-import ImgRegister from '../../images/logoInicioSesion.png';
+import RegisterAnim from '../../images/logoInicioSesion.png';
 import Alerta from '../Alertas/Alert';
 import comprensionContext from '../../context/auth/comprensionContext';
 
 const Login = () => {
 	let navigate = useNavigate();
 	const stateComprension = useContext(comprensionContext);
-	const {loginUsuario, autenticado, usuarioAutenticado} = stateComprension;
+	const {loginUsuario, autenticado, usuarioAutenticado, formularioAlerta} = stateComprension;
 	const [user, setUser] = useState({
 		email: '',
 		password: ''
@@ -27,12 +25,10 @@ const Login = () => {
 	}
 
 	const login = async (e) => {
+		console.log('Desde btn login');
 		if(email === '' || password === ''){
-			console.log('Todos los campos son obligatorios');
-		}
-		const Usuario = {			
-			email,			
-			password
+			formularioAlerta('Todos los campos son obligatorios', 'error');
+			return
 		}
 
 		loginUsuario({
@@ -56,7 +52,7 @@ const Login = () => {
 					</div>
 				</div>
 					<div className='login-der'>
-						<img src={ImgRegister}/>
+						<img src={RegisterAnim} alt="logo de la animacion"/>
 						<p>INICIO DE SESION</p>
 						<Alerta />				
 						<Form className="register-form" onFinish={login}>					
