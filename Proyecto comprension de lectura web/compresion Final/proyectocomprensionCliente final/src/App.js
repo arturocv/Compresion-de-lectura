@@ -5,7 +5,6 @@ import {BrowserRouter as Router,
 } from 'react-router-dom';
 import Register from './components/register';
 import Login from './components/login';
-// import AnimacionLogo from './Animations/logo/AnimacionLogo';
 import PanelPrincipal from './components/actividades'
 import ComprensionState from './context/auth/ComprensionState';
 import Prueba from './components/prueba/Prueba';
@@ -22,11 +21,6 @@ if(token){
 }else{
 	delete axios.defaults.headers.common['x-auth-token'];
 }
-const header = {
-	headers: {
-		"content-type": "application/json"
-	}
-};
 
 const App = () => {
 	return (
