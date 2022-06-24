@@ -61,6 +61,7 @@ const login = async (req, res) => {
         const {email, password} = req.body;
         const connection = await getConnection();
         const result = await connection.query("SELECT * FROM usuarios WHERE email= ?", email);
+        // const result = await connection.query("SELECT * FROM usuarios.id, usuarios.nombres, usuarios.institucion, usuarios.texto, usuarios.email WHERE email= ?", email);
 
         if(result[0] == null){
             return res.status(400).json({ mensaje: "Usuario no encontrado", result });
@@ -76,30 +77,40 @@ const login = async (req, res) => {
                     }
                     const token = jwt.sign(payload, process.env.SECRETA, {
                         expiresIn: 3600
-                    });
-                    
+                    });                    
                     res.status(200).json({
                         mensaje: "Usuario logeado correctamente",
+                        token,
                         usuario: {
                             id,
                             nombres,
-                            token,
+                            email                     
                         },
                     });
                 }else{
                     return res.status(400).json({ mensaje: "Contraseña incorrecta" });
                 }
             })
-        }
-
-        
+        }        
     } catch (error) {
         res.status(500);
         res.send(error.message);
     }
 }
 
+const autenticacionUser = async(req, res) => {
+    try {
+        const connection = await getConnection();
+        // const usuario = await connection.query("SELECT * FROM usuarios WHERE id= ?", req.usuario.id);  Para pedir todos los datos del usuario
+        const usuario = await connection.query("SELECT nombres, email, institucion, texto, id FROM usuarios WHERE id= ?", req.usuario.id);
+        res.json(usuario);
+    } catch (error) {
+        res,json(error);
+    }
+}
+
 export const methods = {
     addUsers,
-    login
+    login,
+    autenticacionUser
 };

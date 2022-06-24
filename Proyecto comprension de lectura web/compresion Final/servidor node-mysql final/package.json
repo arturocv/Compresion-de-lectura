@@ -2,10 +2,10 @@
   "name": "servidor-node-mysql",
   "version": "1.0.0",
   "description": "servidor node js y mysql",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "babel-node": "babel-node --presets=@babel/preset-env",
-    "dev": "nodemon --exec npm run babel-node index.js"
+    "dev": "nodemon --exec npm run babel-node app.js"
   },
   "author": "Arturo Camargo Valenzuela",
   "license": "ISC",

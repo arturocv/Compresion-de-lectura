@@ -1,12 +1,16 @@
-import express, { json }  from "express";
-import morgan from "morgan";
+// import express, { json }  from "express";
+// import morgan from "morgan";
 
-const cors = require("cors");
+const express = require('express');
+const morgan = require('morgan');
+
 const app = express();
+const cors = require("cors");
 
 
 //Routes
-import userRoutes from './routers/userRoutes';
+// import userRoutes from './routers/userRoutes';
+const userRoutes = require('./routers/userRoutes');
 
 
 // Settings
@@ -21,6 +25,5 @@ app.use(express.json());
 
 //Routes
 app.use(userRoutes);
-
 
 export default app;
