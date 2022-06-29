@@ -6,7 +6,6 @@ module.exports = function(req, res, next){
     // Revisar si no hay token
     if(!token) {
         return res.status(401).json({mensaje: 'No hay Token, permiso no válido'});
-
     }
     // validar el token
     try {
@@ -14,6 +13,6 @@ module.exports = function(req, res, next){
         req.usuario = cifrado.usuario;
         next();
     } catch (error) {
-        res.status(401).json({mensaje: 'Token no válido'});
+        return res.status(401).json({mensaje: 'Token no válido'});
     }
 }

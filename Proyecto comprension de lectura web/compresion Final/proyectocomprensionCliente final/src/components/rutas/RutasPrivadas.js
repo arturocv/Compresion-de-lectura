@@ -7,11 +7,11 @@ const RutasPrivadas = ({component: Component, ...props}) => {
     const stateComprension = useContext(comprensionContext);
 	const {autenticado, cargando, usuarioAutenticado} = stateComprension;
 
-    useEffect(() => {
-        usuarioAutenticado();
-    }, []);
+    // useEffect(() => {
+    //     usuarioAutenticado();
+    // }, []);
 
-    return autenticado && !cargando ? <Component/> : <Navigate to="/" />;
+    return autenticado ? <Component/> : <Navigate to="/" />;
 }
 
 export default RutasPrivadas

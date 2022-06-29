@@ -9,7 +9,8 @@ import PanelPrincipal from './components/actividades'
 import ComprensionState from './context/auth/ComprensionState';
 import Prueba from './components/prueba/Prueba';
 import RutasPrivadas from './components/rutas/RutasPrivadas';
-import axios from 'axios';
+// import axios from 'axios';
+import { clienteAxios } from './config';
 
 import './App.scss';
 
@@ -17,9 +18,9 @@ import './App.scss';
 const token = localStorage.getItem('token');    
 
 if(token){         
-	axios.defaults.headers.common['x-auth-token'] = token;
+	clienteAxios.defaults.headers.common['x-auth-token'] = token;
 }else{
-	delete axios.defaults.headers.common['x-auth-token'];
+	delete clienteAxios.defaults.headers.common['x-auth-token'];
 }
 
 const App = () => {

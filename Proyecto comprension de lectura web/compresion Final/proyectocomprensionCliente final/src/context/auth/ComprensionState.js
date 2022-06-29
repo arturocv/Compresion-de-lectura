@@ -32,6 +32,7 @@ const ComprensionState = (props) => {
 
     //Modifica el state de alerta
     const formularioAlerta = (msg, cssload) => {
+        console.log('Activar al cierr de sesion 2');
         const alert = {
             msg,
             cssload
@@ -54,40 +55,30 @@ const ComprensionState = (props) => {
     const registrarUsuario = async datos => {
 
 		try {
-			// const respuesta = await axios.put('http://localhost:4000/api/addUsers', datos);
             const respuesta = await clienteAxios.put('addUsers', datos);
-            console.log(respuesta.data.mensaje);
-
             const alert = {
 				msg: respuesta.data.mensaje,
 				cssload: 'success'
-			}
- 
+			} 
 			dispatch({
 				type: REGISTRO_EXITOSO,
 				payload: alert
 			});
-
             setTimeout(() => {
                 dispatch({
                     type: OCULTAR_ALERTA
                 })
             }, 3000);
 
-			// Obtener el usuario
-			// usuarioAutenticado();
 		} catch (error) {
-            // console.log(error.response.data.mensaje);
 			const alert = {
 				msg: error.response.data.mensaje,
 				cssload: 'error'
 			}
-
 			dispatch({
 				type: REGISTRO_ERROR,
 				payload: alert
 			});
-
             setTimeout(() => {
                 dispatch({
                     type: OCULTAR_ALERTA
@@ -98,28 +89,19 @@ const ComprensionState = (props) => {
 
     const usuarioAutenticado = async () => {
 		const token = localStorage.getItem('token');    
-        console.log('desde auth: ' + token);
-
 		if(token){         
             clienteAxios.defaults.headers.common['x-auth-token'] = token;
 		}else{
             delete clienteAxios.defaults.headers.common['x-auth-token'];
         }
-        // const header = {
-        //     headers: {
-        //         "content-type": "application/json"
-        //     }
-        // };
-
 		try {
-			// const respuesta = await axios.get('http://localhost:4000/api/login');
-            const respuesta = await clienteAxios.get('/login');
-            console.log("Desde auth: "+ respuesta);
+            const respuesta = await clienteAxios.get('/login');            
 			dispatch({
 				type: OBTENER_USUARIO,
 				payload: respuesta.data[0]
-			})
+        })
 		} catch (error) {
+            console.log('Error de autenticacion');
             const alert = {
 				msg: error.response.data.mensaje,
 				cssload: 'error'
@@ -141,17 +123,19 @@ const ComprensionState = (props) => {
     //Cuando el usuario Inicia Sesion
     const loginUsuario = async (data) => {
 		try {
-			// const respuesta = await axios.post('http://localhost:4000/api/login', data);
             const respuesta = await clienteAxios.post('/login', data);
+            const alert = {
+                msg: '',
+                cssload: ''
+            }
 			dispatch({
 				type: LOGIN_EXITOSO,
-				payload: respuesta.data
-			});
+				payload: respuesta.data,                
+			});            
             setTimeout(() => {
                 usuarioAutenticado();
-            }, 1000)
+            }, 5)
 		} catch (error) {
-			// console.log(error.response);
             const alert = {
 				msg: error.response.data.mensaje,
 				cssload: 'error'
@@ -160,18 +144,22 @@ const ComprensionState = (props) => {
 				type: LOGIN_ERROR,
                 payload: alert
 			})
-
             setTimeout(() => {
                 dispatch({
                     type: OCULTAR_ALERTA
                 })
-            }, 5);
+            }, 3000);
 		}
 	}
 
     const cerrarSesion = () => {
+        const alert = {
+            msg: '',
+            cssload: ''
+        }
         dispatch({
-            type: CERRAR_SESION
+            type: CERRAR_SESION,
+            payload: alert
         })
     }
 

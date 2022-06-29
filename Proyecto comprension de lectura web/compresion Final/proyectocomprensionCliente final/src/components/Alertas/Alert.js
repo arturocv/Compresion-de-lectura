@@ -8,6 +8,9 @@ const Alerta = () => {
 	const stateComprension = useContext(comprensionContext);
 	const {alerta, mensajeErrorForm} = stateComprension;
 
+	// console.log(alerta);
+	// console.log(mensajeErrorForm);
+
 	return (
 		<div>
 			{alerta ? (

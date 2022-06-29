@@ -1,7 +1,6 @@
 import React, {useContext, useEffect} from 'react';
 import comprensionContext from '../../context/auth/comprensionContext';
 
-
 const PanelPrincipal = () => {
 	const stateComprension = useContext(comprensionContext);
 	const {usuario, usuarioAutenticado, cerrarSesion} = stateComprension;
@@ -9,6 +8,8 @@ const PanelPrincipal = () => {
 	useEffect(() => {
 		usuarioAutenticado();
 	}, []);	
+
+	//Mostrar Sinner o panel de estudiante
 
 	return (
 		<div>
@@ -20,7 +21,7 @@ const PanelPrincipal = () => {
 					onClick={() => cerrarSesion()}
 				>CERRAR SESION</button>
 			</nav>
-		</div>
+		</div>		
 	)
 }
 

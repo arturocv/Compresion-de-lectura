@@ -50,9 +50,10 @@ export default (state, action) => {
                     // token: null,
                     alerta: true,
                     mensajeErrorForm: action.payload,
+                    cargando: false
             }
 
-            case CERRAR_SESION:
+            
             case AUTH_ERROR:
                 localStorage.removeItem('token');
                 return{
@@ -61,6 +62,17 @@ export default (state, action) => {
                     // usuario: null,
                     alerta: true,
                     mensajeErrorForm: action.payload,
+                    cargando: false
+                }
+            
+            case CERRAR_SESION:
+                localStorage.removeItem('token');
+                return{
+                    autenticado: false,
+                    token: null,
+                    usuario: null,
+                    alert: false,
+                    mensajeErrorForm: action.payload
                 }
 
             case OBTENER_USUARIO:
@@ -74,10 +86,12 @@ export default (state, action) => {
             case LOGIN_EXITOSO:
                 localStorage.setItem('token', action.payload.token);
                 return {
-                    ...state,
+                    // ...state,
+                    alert: false,
                     autenticado: true,
                     mensajeErrorForm: null,
-                    cargando: false
+                    cargando: false,
+                    
                 }
 
         default:

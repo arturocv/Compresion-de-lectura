@@ -25,12 +25,10 @@ const Login = () => {
 	}
 
 	const login = async (e) => {
-		console.log('Desde btn login');
 		if(email === '' || password === ''){
 			formularioAlerta('Todos los campos son obligatorios', 'error');
 			return
 		}
-
 		loginUsuario({
 			email,
 			password
