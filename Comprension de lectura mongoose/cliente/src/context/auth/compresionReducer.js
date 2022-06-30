@@ -4,7 +4,10 @@ import {
     REGISTRO_EXITOSO,
     REGISTRO_ERROR,
     LOGIN_EXITOSO,
-    LOGIN_ERROR
+    LOGIN_ERROR,
+    OBTENER_USUARIO,
+    AUTH_ERROR,
+    CERRAR_SESION
 } from '../../types';
 
 
@@ -18,25 +21,77 @@ export default (state, action) => {
         
             case OCULTAR_ALERTA:
             return {
-                alerta: false,               
+                alerta: false,
+                autenticado: false,               
             }
 
             case REGISTRO_EXITOSO:
-                localStorage.setItem('token', action.payload.token);
                 return{
                     ...state,
-                    autenticado: true,
-                    mensaje: null
+                    alerta: true,
+                    mensajeErrorForm: action.payload 
+                    // mensaje: null
             }
             
             case REGISTRO_ERROR:
+                return{
+                    // ...state,
+                    alerta: true,
+                    mensajeErrorForm: action.payload,
+                    autenticado: false,
+            }
+
+            case LOGIN_ERROR:
                 localStorage.removeItem('token');
                 return{
                     // ...state,
-                    token: null,
+                    autenticado: false,
+                    // token: null,
                     alerta: true,
-                    mensajeErrorForm: action.payload
+                    mensajeErrorForm: action.payload,
+                    cargando: false
             }
+
+            
+            case AUTH_ERROR:
+                localStorage.removeItem('token');
+                return{
+                    autenticado: false,
+                    token: null,
+                    // usuario: null,
+                    alerta: true,
+                    mensajeErrorForm: action.payload,
+                    cargando: false
+                }
+            
+            case CERRAR_SESION:
+                localStorage.removeItem('token');
+                return{
+                    autenticado: false,
+                    token: null,
+                    usuario: null,
+                    alert: false,
+                    mensajeErrorForm: action.payload
+                }
+
+            case OBTENER_USUARIO:
+                return{
+                    ...state,
+                    usuario: action.payload,  
+                    autenticado: true,
+                    cargando: false,
+                }
+            
+            case LOGIN_EXITOSO:
+                localStorage.setItem('token', action.payload.token);
+                return {
+                    // ...state,
+                    alert: false,
+                    autenticado: true,
+                    mensajeErrorForm: null,
+                    cargando: false,
+                    
+                }
 
         default:
             return state;

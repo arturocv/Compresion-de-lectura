@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const PinesSchema = mongoose.Schema({
     estado: {
-        type: String
+        type: Number
     },
     pin: {
         type: String,

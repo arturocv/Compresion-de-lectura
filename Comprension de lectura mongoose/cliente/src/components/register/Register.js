@@ -6,7 +6,6 @@ import { UserOutlined,  LockOutlined,
 import AnimacionLogo from '../../Animations/logo/AnimacionLogo';
 import ImgRegister from '../../images/logoRegistro.png';
 import Alerta from '../Alertas/Alert';
-import axios from "axios";
 import {useNavigate} from 'react-router-dom';
 import comprensionContext from '../../context/auth/comprensionContext';
 
@@ -26,11 +25,11 @@ const Register = () => {
 
 	//Obtener el State del Context
 	const stateComprension = useContext(comprensionContext);
-	const {formularioAlerta, registrarUsuario, autenticado} = stateComprension;
+	const {formularioAlerta, registrarUsuario, registrado} = stateComprension;
 
-	const pinDB = 'asdf1234';
+	// const pinDB = 'asdf1234';
 	const [validapin, setValidaPin] = useState(false);
-	const {nombres, email, colegio, pin, password, repeatPassword, privacyPolicy} = usuario;
+	const {nombres, email, institucion, pin, password, repeatPassword, privacyPolicy} = usuario;
 
 	const onChange = (e) => {
 		if (e.target.name === "privacyPolicy") {
@@ -47,12 +46,8 @@ const Register = () => {
 	};
 
 	const register = async (e) => {
-		if(nombres === '' || email === '' || colegio === '' || pin === '' ||  password === '' || repeatPassword === ''){
+		if(nombres === '' || email === '' || institucion === '' || pin === '' ||  password === '' || repeatPassword === ''){
 			formularioAlerta('Todos los campos son obligatorios', 'error');
-			return;
-		}
-		if(pin === pinDB){
-			formularioAlerta('El PIN ya fue usado','error');
 			return;
 		}
 		if(password.length < 8 ){
@@ -67,54 +62,20 @@ const Register = () => {
 			formularioAlerta('Acepte los terminos de politicas de privacidad', 'error');
 			return;
 		}		
-		const Usuario = {
-			nombres,
-			email,
-			colegio,
-			pin,
-			password
-		}
 
 		registrarUsuario({
-			nombres, email, colegio, pin, password
-		})	
-		
-		//CODIGO QUE FUNCIONA CORRECTAMENTE
-		// await axios.post('http://localhost:4000/registro', Usuario)
-		// .then(({data}) => {
-		// 	console.log(data)
-		// 	setUsuario({
-		// 		nombres: '',
-		// 		email: '',
-		// 		colegio: '',
-		// 		pin: '',
-		// 		password: '',
-		// 		repeatPassword: '',
-		// 		privacyPolicy: false
-		// 	});
-		// 	formularioAlerta('Usuario creado correctamente', 'success');
-		// 	setTimeout(() => {
-		// 		navigate('/')
-		// 	}, 1500)
-		// }).catch((error) => {
-		// 	console.log(error);
-		// 	// setMensaje("Hubo un error");
-		// 	formularioAlerta(error, 'error');
-		// 	setTimeout(() => {
-		// 	//   setMensaje("");
-		// 	}, 1500);
-		// });
-		
+			nombres, email, institucion, pin, password
+		});
 	}
 
 	useEffect(() => {
 		setTimeout(() => {
-			if(autenticado){
-				navigate("/");
+			if(registrado === true){
+				navigate('/');
 			}
-			formularioAlerta('Usuario creado correctamente', 'success');
 		}, 2000)	
-	}, [autenticado]);
+	});
+
 
 	return (
 		<div className='contenido-general'>
@@ -153,12 +114,12 @@ const Register = () => {
 						</Form.Item>
 						<Form.Item className='ant-form-item'>
 							<Input
-								name="colegio"		
+								name="institucion"		
 								prefix={<EnvironmentOutlined type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
 								type="text"
 								placeholder="Colegio"
 								className="register-form__input"
-								value={colegio}
+								value={institucion}
 								onChange={onChange}
 							/>						
 						</Form.Item>

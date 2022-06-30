@@ -32,6 +32,9 @@ exports.addUsers = async(req, res) => {
             return res.status(400).json({ msg: 'Pin ya fue utilizado'});
         }        
         
+        //Modificamos el valor de estado de 0 a 1 para que no se pueda volver a usar
+        await Pines.updateOne({pin: valPin[0].pin}, {$set: {estado: 1}});
+
         //Crea nuevo usuario
         user = new Users(req.body);
 
@@ -39,6 +42,7 @@ exports.addUsers = async(req, res) => {
         const salt = bcrypt.genSaltSync(10);
         user.password = bcrypt.hashSync(password, salt );
 
+        //Agregamos el nombre del libro a los datos de usuario
         user.texto = valPin[0].texto;
 
         //Guardar nuevo usuario
@@ -66,7 +70,7 @@ exports.loginUser = async (req, res) => {
         //Comparamos las contraseñas
         const correctPass = bcrypt.compareSync(password, user.password);
         if(!correctPass) {
-            return res.status(400).json({msg: 'Password Incorrecto' })
+            return res.status(400).json({msg: 'Contraseña Incorrecta' })
         }
 
         // Crear y firmar el JWT
@@ -93,9 +97,9 @@ exports.loginUser = async (req, res) => {
 exports.userAuth = async (req, res) => {
     try {
         const user = await Users.findById(req.user.id).select('-password');
-        res.json({user});
+        return res.json({user});
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg: 'Hubo un error'});
+        return res.status(500).json({msg: 'Hubo un error'});
     }
 }

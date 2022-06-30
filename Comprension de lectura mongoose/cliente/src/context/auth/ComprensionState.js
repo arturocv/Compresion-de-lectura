@@ -7,17 +7,23 @@ import {
     REGISTRO_EXITOSO,
     REGISTRO_ERROR,
     LOGIN_EXITOSO,
-    LOGIN_ERROR
+    LOGIN_ERROR,
+    OBTENER_USUARIO,
+    AUTH_ERROR,
+    CERRAR_SESION
 } from '../../types';
-import clienteAxios from '../../config/axios';
-import axios from 'axios';
+import { clienteAxios } from '../../config';
 
 const ComprensionState = (props) => {
     const initialState = {
+        token: localStorage.getItem('token'),
         alerta: false,
         mensajeErrorForm: null,
-        autenticado: null,
-		mensaje: null
+        autenticado: false,
+		mensaje: null,
+        usuario: null, 
+        cargando: true,
+        registrado: false
     }
     //Dispatch para ejecutar las acciones
     const [state, dispatch] = useReducer(comprensionReducer, initialState);
@@ -33,7 +39,6 @@ const ComprensionState = (props) => {
         }
         dispatch({
             type: FORMULARIO_ALERTA,
-            // payload: [msg, cssload]  
             payload: alert          
         });
 
@@ -45,59 +50,118 @@ const ComprensionState = (props) => {
         }, 3000);
     }
 
+    //Agregar usuario
     const registrarUsuario = async datos => {
-
 		try {
-			const respuesta = await axios.post('http://localhost:4000/registro', datos);
-			console.log(respuesta.data);  //Validar la respuesta por consola para ver conexion
- 
+            const respuesta = await clienteAxios.post('addUser', datos);
+
+            const alert = {
+				msg: respuesta.data.msg,
+				cssload: 'success'
+			} 
 			dispatch({
 				type: REGISTRO_EXITOSO,
-				payload: respuesta.data
+				payload: alert
 			});
-			// //Obtener el usuario
-			// usuarioAutenticado();
+            setTimeout(() => {
+                dispatch({
+                    type: OCULTAR_ALERTA
+                })
+            }, 3000);
+            
 		} catch (error) {
-            // console.log(error.response.data.mensaje);
 			const alert = {
-				msg: error.response.data.mensaje,
+				msg: error.response.data.msg,
 				cssload: 'error'
 			}
-
 			dispatch({
 				type: REGISTRO_ERROR,
 				payload: alert
 			});
+            setTimeout(() => {
+                dispatch({
+                    type: OCULTAR_ALERTA
+                })
+            }, 2000);            
+		}
+	}
 
+    const usuarioAutenticado = async () => {        
+		const token = localStorage.getItem('token');    
+		if(token){         
+            clienteAxios.defaults.headers.common['x-auth-token'] = token;
+		}else{
+            delete clienteAxios.defaults.headers.common['x-auth-token'];
+        }
+
+		try {
+            const respuesta = await clienteAxios.get('/login');
+            // console.log(respuesta.data.user);            
+            dispatch({
+                type: OBTENER_USUARIO,
+                payload: respuesta.data.user
+            });            
+		} catch (error) {
+            const alert = {
+				msg: error.response.data.msg,
+				cssload: 'error'
+			}
+			dispatch({
+				type: AUTH_ERROR,
+                payload: alert
+			})
+
+            setTimeout(() => {
+                dispatch({
+                    type: OCULTAR_ALERTA
+                })
+            }, 2000);
+		}
+        
+	}
+
+
+    //Cuando el usuario Inicia Sesion
+    const loginUsuario = async (data) => {        
+		try {
+            const respuesta = await clienteAxios.post('/login', data);
+			dispatch({
+				type: LOGIN_EXITOSO,
+				payload: respuesta.data,                
+			});  
+      
+            setTimeout(() => {
+                usuarioAutenticado();
+            }, 5)
+		} catch (error) {
+            const alert = {
+				msg: error.response.data.msg,
+				cssload: 'error'
+			}
+			dispatch({
+				type: LOGIN_ERROR,
+                payload: alert
+			})
             setTimeout(() => {
                 dispatch({
                     type: OCULTAR_ALERTA
                 })
             }, 3000);
 		}
+        
 	}
 
-    const usuarioAutenticado = async () => {
-		const token = localStorage.getItem('token');
-		if(token){
-			//Funcion para enviar el token por headers
-			// tokenAuth(token);
-		}
+    const cerrarSesion = () => {        
+        const alert = {
+            msg: '',
+            cssload: ''
+        }
+        dispatch({
+            type: CERRAR_SESION,
+            payload: alert
+        });        
+    }
 
-		try {
-			const respuesta = await axios.get('/login');
-			console.log("desde respuesta: " + respuesta);
-			// dispatch({
-			// 	type: OBTENER_USUARIO,
-			// 	payload: respuesta.data
-			// })
-		} catch (error) {
-			// console.log(error.response);
-			dispatch({
-				type: LOGIN_ERROR
-			})
-		}
-	}
 
     return (
         <comprensionContext.Provider
@@ -105,8 +169,15 @@ const ComprensionState = (props) => {
                 alerta: state.alerta,
                 mensajeErrorForm: state.mensajeErrorForm,
                 autenticado: state.autenticado,
+                usuario: state.usuario,
+                token: state.token,
+                cargando: state.cargando,
+                registrado: state.registrado,
                 formularioAlerta,  
-                registrarUsuario              
+                registrarUsuario,
+                loginUsuario,
+                usuarioAutenticado,
+                cerrarSesion              
             }}
         >{props.children}
 

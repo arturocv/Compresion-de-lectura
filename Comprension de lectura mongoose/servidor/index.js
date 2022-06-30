@@ -2,6 +2,7 @@ const express = require('express');
 const config = require('./config');
 const database = require('./database/db');
 const route = require('./routes/register');
+const cors = require('cors');
 
 //Exxtraer puerto de conexion
 const {port, alloedDomains} = config;
@@ -15,7 +16,7 @@ const app = express();
 
 //Habilitar el json para leerlo
 app.use(express.json({ extended: true }));
-
+app.use(cors());
 
 app.use(route);
 
