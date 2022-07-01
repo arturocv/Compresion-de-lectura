@@ -52,7 +52,6 @@ exports.addUsers = async(req, res) => {
         res.status(200).json({ msg: 'El usuario creado correctamente' });
         // mongoose.connection.close();
     } catch (error) {
-            console.log(error);
             res.status(400).send('Hubo un error');
     }
 }
@@ -99,7 +98,6 @@ exports.userAuth = async (req, res) => {
         const user = await Users.findById(req.user.id).select('-password');
         return res.json({user});
     } catch (error) {
-        console.log(error);
         return res.status(500).json({msg: 'Hubo un error'});
     }
 }

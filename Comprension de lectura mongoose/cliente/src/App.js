@@ -15,7 +15,6 @@ import { clienteAxios } from './config';
 import './App.scss';
 
 //Revisar si tenemos un token
-/*
 const token = localStorage.getItem('token');    
 
 if(token){         
@@ -23,7 +22,7 @@ if(token){
 }else{
 	delete clienteAxios.defaults.headers.common['x-auth-token'];
 }
-*/
+
 const App = () => {
 	return (
 		<ComprensionState>
